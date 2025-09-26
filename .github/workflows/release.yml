@@ -13,6 +13,7 @@ on:
         
 jobs:
   build-and-release:
+    name: "[${{ inputs.version_tag }}] Build Konektor, create installer and release it publicly"
     # windows-2022 runner has a .net 4.7.2 already installed.
     runs-on: windows-2022
     steps:
