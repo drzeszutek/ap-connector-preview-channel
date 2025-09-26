@@ -81,6 +81,7 @@ jobs:
           repository: 'drzeszutek/ap-connector-preview-channel'
           ref: main
           path: preview
+          persist-credentials: false
           
       - name: Update update.json
         working-directory: preview
