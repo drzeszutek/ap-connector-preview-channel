@@ -1,0 +1,59 @@
+name: Create Konektor Release
+on:
+  workflow_call:
+    inputs:
+      version_tag:
+        description: "Enter the existing Git tag to release (e.g., v1.1.0)"
+        required: true
+        type: string
+    secrets:
+      PAT:
+        description: "PAT to access ap-connector repo"
+        required: true
+        
+jobs:
+  build-and-release:
+    # windows-2019 runner has a .net 4.7.2 already installed.
+    runs-on: windows-2019
+    steps:
+      - name: Checkout code from the specified tag (Public)
+        if: ${{ inputs.is_public }}
+        uses: actions/checkout@v5
+        with:
+          repository: "scanye/ap-connector"
+          ref: "develop"
+          token: ${{ secrets.PAT }}
+          
+      - name: Setup .NET 9 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+          
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+        
+      - name: Restore NuGet dependencies
+        run: dotnet restore src/Connector.sln
+       
+      - name: Install Wix globally
+        run: dotnet tool install --global wix
+   
+      - name: Publish Connector.GUI and Stamp Version
+        run: |
+          $version = "${{ inputs.version_tag }}".Substring(1)
+          dotnet publish src/Connector.GUI/Connector.GUI.csproj --configuration Release --self-contained true -p:PublishSingleFile=true --output ./publish-gui /p:Version=$version
+        shell: pwsh
+        
+      - name: Build installer builder
+        run: msbuild src/Connector.Installer/Connector.Installer.csproj /p:Configuration=Release /p:Platform=AnyCPU
+        #run: dotnet run --project src/Connector.Installer/Connector.Installer.csproj --configuration Release -- "${{ github.workspace }}/publish-gui"
+        
+      - name: Run installer builder
+        run: src/Connector.Installer/bin/Release/net472/Connector.Installer.exe -- "${{ github.workspace }}/publish-gui"
+        
+      # - name: Create GitHub Release and Upload Installer [Public]
+      #   uses: softprops/action-gh-release@v2
+      #   with:
+      #     tag_name: ${{ inputs.version_tag }}
+      #     files: src/Connector.Installer/bin/Release/net472/releases/Scanye.Konektor.Installer.${{ }}.msi
+      #     repository: 'drzeszutek/ap-connector-preview-channel'
