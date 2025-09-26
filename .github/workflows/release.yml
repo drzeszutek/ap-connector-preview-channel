@@ -40,7 +40,7 @@ jobs:
       - name: Publish Connector.GUI and Stamp Version
         run: |
           $version = "${{ inputs.version_tag }}".Substring(1)
-          dotnet publish src/Connector.GUI/Connector.GUI.csproj --configuration Release --self-contained true -p:PublishSingleFile=true --output ./publish-gui /p:Version=$version /p:WarningLevel=0
+          dotnet publish src/Connector.GUI/Connector.GUI.csproj --configuration Release --self-contained true -p:PublishSingleFile=true --output ./publish-gui /p:Version=$version /p:AssemblyVersion=$version /p:WarningLevel=0
         shell: pwsh
         
       - name: Build installer builder
