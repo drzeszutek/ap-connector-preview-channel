@@ -25,6 +25,7 @@ jobs:
           repository: "scanye/ap-connector"
           ref: "develop"
           token: ${{ secrets.PAT }}
+          persist-credentials: false
           
       - name: Setup .NET 9 SDK
         uses: actions/setup-dotnet@v4
