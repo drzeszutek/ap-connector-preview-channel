@@ -45,7 +45,7 @@ jobs:
           
       - name: Publish Connector.GUI and Stamp Version
         run: |
-          dotnet publish src/Connector.GUI/Connector.GUI.csproj --configuration Release --self-contained true -p:PublishSingleFile=true --output ./publish-gui /p:Version=${VERSION} /p:AssemblyVersion=${VERSION} /p:FileVersion=$version /p:WarningLevel=0
+          dotnet publish src/Connector.GUI/Connector.GUI.csproj --configuration Release --self-contained true -p:PublishSingleFile=true --output ./publish-gui /p:Version=$env:VERSION /p:AssemblyVersion=$env:VERSION /p:FileVersion=$env:VERSION /p:WarningLevel=0
         shell: pwsh
         
       - name: Build installer builder
@@ -58,5 +58,5 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ inputs.version_tag }}
-          files: "src/Connector.Installer/bin/Release/net472/releases/Scanye.Konektor.Installer.${VERSION}.msi"
+          files: "src/Connector.Installer/bin/Release/net472/releases/Scanye.Konektor.Installer.${{ env.VERSION }}.msi"
           repository: 'drzeszutek/ap-connector-preview-channel'
