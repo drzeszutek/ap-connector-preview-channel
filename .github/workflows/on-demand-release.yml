@@ -17,3 +17,4 @@ jobs:
       version_tag: ${{ inputs.version_tag }}
     secrets:
       PAT: ${{ secrets.PAT }}
+      PAT_RELEASE_PUSH: ${{ secrets.PAT_RELEASE_PUSH }}
