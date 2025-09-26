@@ -40,8 +40,8 @@ jobs:
       - name: Set stripped version
         id: vars
         run: |
-          VERSION = ${{ inputs.version_tag }} 
-          echo "VERSION=${VERSION:1}" >> $GITHUB_ENV
+          $VERSION = "${{ inputs.version_tag }}"
+          echo "VERSION=$($VERSION.Substring(1))" >> $GITHUB_ENV
           
       - name: Publish Connector.GUI and Stamp Version
         run: |
