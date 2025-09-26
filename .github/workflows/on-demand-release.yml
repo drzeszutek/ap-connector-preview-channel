@@ -1,5 +1,7 @@
 name: Create Konektor Release On Demand
 
+run-name: "[${{ inputs.version_tag }}] Build Konektor, create installer and release it (public)"
+
 on:
   workflow_dispatch:
     inputs:
@@ -10,7 +12,6 @@ on:
 
 jobs:
   build-and-release:
-    name: "[${{ inputs.version_tag }}] Build Konektor, create installer and release it (public)"
     uses: ./.github/workflows/release.yml
     with:
       version_tag: ${{ inputs.version_tag }}
