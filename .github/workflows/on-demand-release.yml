@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-release:
-    name: Build and Release Konektor
+    name: "[${{ inputs.version_tag }}] Build Konektor, create installer and release it (public)"
     uses: ./.github/workflows/release.yml
     with:
       version_tag: ${{ inputs.version_tag }}
