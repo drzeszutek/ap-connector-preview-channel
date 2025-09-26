@@ -56,11 +56,58 @@ jobs:
         
       - name: Run installer builder
         run: cd src/Connector.Installer/bin/Release/net472 && ./Connector.Installer.exe "${{ github.workspace }}/publish-gui"
+
+      # Create (empty) changelog, figure out when and how update it with real changes
+      - name: Create changelog
+        run: |
+          $releaseDir = "src/Connector.Installer/bin/Release/net472/releases"
+          New-Item -ItemType Directory -Force -Path $releaseDir
+          "" | Out-File -FilePath "$releaseDir/changelog.txt"
+        shell: pwsh
         
       - name: Create GitHub Release and Upload Installer [Public]
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ inputs.version_tag }}
-          files: "src/Connector.Installer/bin/Release/net472/releases/Scanye.Konektor.Installer.${{ env.VERSION }}.msi"
+          files: |
+            "src/Connector.Installer/bin/Release/net472/releases/Scanye.Konektor.Installer.${{ env.VERSION }}.msi"
+            "src/Connector.Installer/bin/Release/net472/releases/changelog.txt"
           repository: 'drzeszutek/ap-connector-preview-channel'
           token: ${{ secrets.PAT_RELEASE_PUSH }}
+
+      - name: Checkout update repository
+        uses: actions/checkout@v5
+        with:
+          repository: 'scanye/ap-connector-preview-channel'
+          ref: main
+          path: preview
+          
+      - name: Update update.json
+        working-directory: preview
+        run: |
+          $version = $env:VERSION
+          $tag = "${{ inputs.version_tag }}"
+          $repo = "scanye/ap-connector-preview-channel"
+          $msi = "Scanye.Konektor.Installer.$version.msi"
+          $json = @{
+            "version" = $version
+            "url" = "https://github.com/$repo/releases/download/$tag/$msi"
+            "changelog" = "https://github.com/$repo/releases/download/$tag/changelog.txt"
+            "mandatory" = @{
+              "value" = $false
+              "minVersion" = "1.0.0"
+              "mode" = "Normal"
+            }
+          } | ConvertTo-Json -Depth 3
+          Set-Content -Path update.json -Value $json
+        shell: pwsh
+        
+      - name: Commit and push update.json
+        working-directory: preview
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add update.json
+          git commit -m "Update update.json for ${{ inputs.version_tag }}"
+          git push
+        shell: pwsh
