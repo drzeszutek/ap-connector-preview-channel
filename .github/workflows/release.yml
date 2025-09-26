@@ -10,6 +10,9 @@ on:
       PAT:
         description: "PAT to access ap-connector repo"
         required: true
+      PAT_RELEASE_PUSH:
+        description: "PAT to create a new release and push release files"
+        required: true
         
 jobs:
   build-and-release:
@@ -60,3 +63,4 @@ jobs:
           tag_name: ${{ inputs.version_tag }}
           files: "src/Connector.Installer/bin/Release/net472/releases/Scanye.Konektor.Installer.${{ env.VERSION }}.msi"
           repository: 'drzeszutek/ap-connector-preview-channel'
+          token: ${{ secrets.PAT_RELEASE_PUSH }}
