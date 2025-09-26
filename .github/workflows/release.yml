@@ -40,13 +40,12 @@ jobs:
       - name: Set stripped version
         id: vars
         run: |
-          $version = "${{ inputs.version_tag }}".Substring(1)
-          echo "stripped_version=$version" >> $GITHUB_OUTPUT
+          VERSION = ${{ inputs.version_tag }} 
+          echo "VERSION=${VERSION:1}" >> $GITHUB_ENV
           
       - name: Publish Connector.GUI and Stamp Version
         run: |
-          $version = "${{ steps.vars.outputs.stripped_version }}"
-          dotnet publish src/Connector.GUI/Connector.GUI.csproj --configuration Release --self-contained true -p:PublishSingleFile=true --output ./publish-gui /p:Version=$version /p:AssemblyVersion=$version /p:FileVersion=$version /p:WarningLevel=0
+          dotnet publish src/Connector.GUI/Connector.GUI.csproj --configuration Release --self-contained true -p:PublishSingleFile=true --output ./publish-gui /p:Version=${VERSION} /p:AssemblyVersion=${VERSION} /p:FileVersion=$version /p:WarningLevel=0
         shell: pwsh
         
       - name: Build installer builder
@@ -59,5 +58,5 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ inputs.version_tag }}
-          files: "src/Connector.Installer/bin/Release/net472/releases/Scanye.Konektor.Installer.${{ steps.vars.outputs.stripped_version }}.msi"
+          files: "src/Connector.Installer/bin/Release/net472/releases/Scanye.Konektor.Installer.${VERSION}.msi"
           repository: 'drzeszutek/ap-connector-preview-channel'
