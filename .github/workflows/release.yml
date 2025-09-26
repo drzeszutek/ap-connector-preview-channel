@@ -78,7 +78,7 @@ jobs:
       - name: Checkout update repository
         uses: actions/checkout@v5
         with:
-          repository: 'scanye/ap-connector-preview-channel'
+          repository: 'drzeszutek/ap-connector-preview-channel'
           ref: main
           path: preview
           
@@ -87,7 +87,7 @@ jobs:
         run: |
           $version = $env:VERSION
           $tag = "${{ inputs.version_tag }}"
-          $repo = "scanye/ap-connector-preview-channel"
+          $repo = "drzeszutek/ap-connector-preview-channel"
           $msi = "Scanye.Konektor.Installer.$version.msi"
           $json = @{
             "version" = $version
