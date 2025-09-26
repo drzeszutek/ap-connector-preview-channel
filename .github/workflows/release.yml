@@ -17,7 +17,6 @@ jobs:
     runs-on: windows-2019
     steps:
       - name: Checkout code from the specified tag (Public)
-        if: ${{ inputs.is_public }}
         uses: actions/checkout@v5
         with:
           repository: "scanye/ap-connector"
