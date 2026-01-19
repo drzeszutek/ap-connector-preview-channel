@@ -1,10 +1,10 @@
 {
-  "url": "https://github.com/drzeszutek/ap-connector-preview-channel/releases/download/v1.12.0/Scanye.Konektor.Installer.1.12.0.msi",
+  "url": "https://github.com/drzeszutek/ap-connector-preview-channel/releases/download/v1.12.1/Scanye.Konektor.Installer.1.12.1.msi",
   "mandatory": {
     "mode": "Normal",
     "value": false,
     "minVersion": "1.0.0"
   },
-  "version": "1.12.0",
-  "changelog": "https://github.com/drzeszutek/ap-connector-preview-channel/releases/download/v1.12.0/changelog.txt"
+  "version": "1.12.1",
+  "changelog": "https://github.com/drzeszutek/ap-connector-preview-channel/releases/download/v1.12.1/changelog.txt"
 }
